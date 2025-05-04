@@ -1,0 +1,17 @@
+# Xcode
+DerivedData/
+*.xcworkspace
+*.xcuserdata/
+*.xcuserstate
+
+# SwiftPM
+.build/
+
+# Swift Package Resolution
+Package.resolved
+
+# API Keys
+Config/APIKeys.swift
+
+# Others
+*.DS_Store

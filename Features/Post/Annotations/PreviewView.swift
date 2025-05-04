@@ -63,9 +63,9 @@ extension Post {
         /// Configures the preview with a post and adjusts the size accordingly.
         func configure(with post: Post.Model, size: CGFloat) {
             isDisplayingVideo = post.mainRenderable?.isVideo ?? false
-            
+
             let postSize: CGSize
-            
+
             if isDisplayingVideo {
                 let isVertical = post.mainRenderable?.isVertical ?? true
                 if isVertical {
@@ -76,16 +76,24 @@ extension Post {
             } else {
                 postSize = CGSize(width: size, height: size)
             }
-            
+
             frame.size = postSize
             setNeedsLayout()
             layoutIfNeeded()
-            
-            if let url = post.mainRenderable?.thumbnailURL {
+
+            if let thumbnail = post.mainRenderable?.thumbnailImage {
+                imageView.image = thumbnail
+            } else if let url = post.mainRenderable?.thumbnailURL {
+                imageView.alpha = 0
                 imageView.loadImage(from: url) { [weak self] image in
                     guard let self, let image else { return }
                     self.imageView.image = image
+                    UIView.animate(withDuration: 0.25) {
+                        self.imageView.alpha = 1
+                    }
                 }
+            } else {
+                imageView.image = UIImage(named: "placeholder")
             }
         }
     }

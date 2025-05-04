@@ -1,5 +1,5 @@
 //
-//  Int+Math.swift
+//  CGFloat+Extensions.swift
 //  SocialMap
 //
 //  Created by Arnaud Maillet on 15/04/2025.

@@ -20,7 +20,6 @@ final class FeedCoordinator: FeedCoordinatorProtocol {
 
     // MARK: - Initialization
 
-
     init(presentingViewController: UIViewController & FeedControllerDelegate) {
         self.presentingViewController = presentingViewController
     }
@@ -35,12 +34,14 @@ final class FeedCoordinator: FeedCoordinatorProtocol {
     /// Presents the FeedViewController with a custom transition from an annotationView and a given FeedContent.
     private func presentFeedView(for content: FeedContent, from annotationView: MKAnnotationView, in mapView: MKMapView, image: UIImage) {
         guard let animatedView = extractPreviewView(from: annotationView) else { return }
-        let frameInWindow = animatedView.convert(animatedView.bounds, to: presentingViewController?.view)
+        guard let window = presentingViewController?.view.window else { return }
+        let frameInWindow = animatedView.convert(animatedView.bounds, to: window)
         let feedViewController = FeedViewController(feedContent: content, originImage: image)
         
         feedViewController.originFrame = frameInWindow
         feedViewController.modalPresentationStyle = .custom
         feedViewController.delegate = presentingViewController
+        feedViewController.mapContainerView = (presentingViewController as? HomeViewController)?.contentView
         
         let selectedPost: Post.Model
         if let cluster = annotationView as? Post.Annotation.ClusterView,

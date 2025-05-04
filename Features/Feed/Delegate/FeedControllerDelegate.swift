@@ -10,6 +10,6 @@ import UIKit
 protocol FeedControllerDelegate: AnyObject {
     func feedViewShouldHideAnnotation()
     func feedDidDismiss()
-    func updateBackgroundDuringDismissGesture(progress: CGFloat)
-    func resetMapAppearance()
+    func currentAnnotationFrameInWindow() -> CGRect?
+    func animateMapResetDuringDismiss(progress: CGFloat)
 }

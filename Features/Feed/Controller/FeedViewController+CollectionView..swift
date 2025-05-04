@@ -15,7 +15,14 @@ extension FeedViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath) as! FeedCell
-        cell.configure(with: posts[indexPath.item], safeAreaInsets: view.safeAreaInsets)
+        let post = posts[indexPath.item]
+
+        let controller = cellControllers[indexPath] ?? FeedCellController()
+        controller.configure(cell: cell, with: post, safeAreaInsets: view.safeAreaInsets)
+        cellControllers[indexPath] = controller
+        
+        cell.setupOverlayView(in: self)
+
         return cell
     }
 }
@@ -25,7 +32,10 @@ extension FeedViewController: UICollectionViewDelegate {
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         let page = Int(scrollView.contentOffset.y / scrollView.bounds.height)
         print("📸 Scroll terminé → post \(page + 1)/\(posts.count)")
-        updateDismissOverlayView()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        updateCurrentCellCornerRadius(scrollView: scrollView)
     }
 }
 

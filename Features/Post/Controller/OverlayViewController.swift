@@ -9,59 +9,97 @@ import UIKit
 
 final class OverlayViewController: UIViewController {
 
-    private let overlayUserView = OverlayUserView()
-    private var isFollowing = false
-    private var topConstraint: NSLayoutConstraint?
-    private var topInset: CGFloat = 8
+    // MARK: - Subviews
+    private let userView = OverlayUserView()
+    private let descriptionView = OverlayDescriptionView()
+    
+    // MARK: - Layout
 
+    private var appliedSafeAreaInsets: UIEdgeInsets?
+    private var topConstraint: NSLayoutConstraint?
+    private var bottomConstraint: NSLayoutConstraint?
+
+    // MARK: - State
+    private var post: Post.Model?
+    private var isFollowing = false
+    private var hasLayoutCompleted = false
+
+    // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupOverlayView()
+        setupOverlay()
         setupFollowButtonAction()
     }
-    
 
-    private func setupOverlayView() {
-        view.backgroundColor = .blue.withAlphaComponent(0.5)
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        hasLayoutCompleted = true
+        applyConfigurationIfReady()
+    }
 
-        overlayUserView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(overlayUserView)
+    // MARK: - Configuration
+    func configure(with post: Post.Model, safeAreaInsets: UIEdgeInsets) {
+        self.post = post
+        self.appliedSafeAreaInsets = safeAreaInsets
+        applyConfigurationIfReady()
+    }
 
-        overlayUserView.setContentHuggingPriority(.required, for: .vertical)
-        overlayUserView.setContentCompressionResistancePriority(.required, for: .vertical)
+    private func applyConfigurationIfReady() {
+        guard hasLayoutCompleted, let post, let insets = appliedSafeAreaInsets else { return }
 
-        topConstraint = overlayUserView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: topInset)
+        userView.configure(with: post)
+        userView.updateFollowButton(title: "Follow", isFollowing: false, animated: false)
+        userView.applySafeAreaInsets(insets)
+        
+
+        descriptionView.configure(with: post)
+        descriptionView.applySafeAreaInsets(insets)
+        
+
+        self.post = nil
+        self.appliedSafeAreaInsets = nil
+    }
+
+    // MARK: - Setup
+    private func setupOverlay() {
+        view.backgroundColor = .clear
+
+        [userView, descriptionView].forEach {
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview($0)
+        }
+
+        topConstraint = userView.topAnchor.constraint(equalTo: view.topAnchor)
+        bottomConstraint = descriptionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
 
         NSLayoutConstraint.activate([
+            // UserView
             topConstraint!,
-            overlayUserView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            overlayUserView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+            userView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            userView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+
+            // DescriptionView
+            descriptionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            descriptionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomConstraint!
         ])
     }
 
     private func setupFollowButtonAction() {
-        overlayUserView.followButton.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
-    }
-
-    func configure(with post: Post.Model, safeAreaInsets: UIEdgeInsets) {
-        topConstraint?.constant = safeAreaInsets.top + topInset
-        overlayUserView.configure(with: post)
-        overlayUserView.updateFollowButton(title: "Follow", isFollowing: false, animated: false)
+        userView.followButton.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
     }
 
     @objc private func followButtonTapped() {
         isFollowing.toggle()
-        
         let newTitle = isFollowing ? "Following" : "Follow"
-        overlayUserView.updateFollowButton(title: newTitle, isFollowing: isFollowing)
+        userView.updateFollowButton(title: newTitle, isFollowing: isFollowing)
 
         UIView.animate(withDuration: 0.2,
                        delay: 0,
                        usingSpringWithDamping: 0.6,
                        initialSpringVelocity: 0.4,
-                       options: [.curveEaseOut],
-                       animations: {
-            self.overlayUserView.followButton.transform = .identity
-        })
+                       options: [.curveEaseOut]) {
+            self.userView.followButton.transform = .identity
+        }
     }
 }

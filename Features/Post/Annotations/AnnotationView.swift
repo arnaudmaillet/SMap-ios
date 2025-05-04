@@ -17,29 +17,42 @@ extension Post.Annotation {
         static let identifier = "Annotation"
         weak var delegate: AnnotationViewDelegate?
         
-        /// Safely casted annotation model.
-        private var postAnnotationModel: Post.Annotation.Model? {
-            annotation as? Post.Annotation.Model
+        private(set) var model: Post.Annotation.Model?
+        
+        // MARK: - Init
+        
+        override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
+            super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            configure(with: annotation)
+        }
+        
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) has not been implemented")
         }
         
         // MARK: - Overrides
         
-        /// Called when the annotation is set. Configures the preview if the post has a renderable.
         override var annotation: MKAnnotation? {
             didSet {
                 guard annotation !== oldValue else { return }
-                
-                if let post = postAnnotationModel?.post,
-                   post.mainRenderable != nil {
-                    setupPreview(with: post)
-                }
+                configure(with: annotation)
             }
         }
         
-        /// Handles tap interactions on the annotation view.
         override func handleTap() {
-            guard let post = postAnnotationModel?.post else { return }
+            guard let post = model?.post else { return }
             delegate?.annotationView(self, didTapWith: post)
+        }
+        
+        // MARK: - Private
+        
+        private func configure(with annotation: MKAnnotation?) {
+            model = annotation as? Post.Annotation.Model
+            
+            if let post = model?.post,
+               post.mainRenderable != nil {
+                setupPreview(with: post)
+            }
         }
     }
 }

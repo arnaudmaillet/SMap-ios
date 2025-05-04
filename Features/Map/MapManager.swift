@@ -8,25 +8,18 @@
 import UIKit
 import MapKit
 
-protocol MapManagerDelegate: AnyObject {
-    func didSelectPost(_ post: Post.Model)
-    func didSelectCluster(_ posts: [Post.Model])
-    func annotationViewDelegate(for view: Post.Annotation.View) -> AnnotationViewDelegate?
-    func clusterViewDelegate(for view: Post.Annotation.ClusterView) -> ClusterViewDelegate?
-}
-
-final class MapManager: NSObject, MKMapViewDelegate {
+final class MapManager: NSObject {
     
     // MARK: - Properties
     
     private let mapView: MKMapView
-    weak var delegate: MapManagerDelegate?
+    weak var delegate: MapProtocol?
     var selectedAnnotations: [MKAnnotation] { mapView.selectedAnnotations }
     
     // MARK: - Initialization
     
     init(frame: CGRect) {
-        self.mapView = MKMapView(frame: frame)
+        mapView = MKMapView(frame: frame)
         super.init()
 
         setupMapView()
@@ -44,11 +37,11 @@ final class MapManager: NSObject, MKMapViewDelegate {
         mapView.showsCompass = false
         mapView.showsScale = false
         mapView.showsTraffic = false
-        
-        if #available(iOS 13.0, *) {
-            let config = MKStandardMapConfiguration()
-            config.pointOfInterestFilter = .excludingAll
+
+        if #available(iOS 17.0, *) {
+            let config = MKStandardMapConfiguration(elevationStyle: .realistic)
             config.showsTraffic = false
+            config.pointOfInterestFilter = .excludingAll
             mapView.preferredConfiguration = config
         }
     }
@@ -70,36 +63,21 @@ final class MapManager: NSObject, MKMapViewDelegate {
             mapView.trailingAnchor.constraint(equalTo: parentView.trailingAnchor),
             mapView.bottomAnchor.constraint(equalTo: parentView.bottomAnchor)
         ])
+        
+        mapView.layer.cornerRadius = 52.25
+        mapView.layer.masksToBounds = true 
     }
     
-    // MARK: - MKMapViewDelegate
-       
-    /// Returns a custom PostAnnotationView for posts and PostClusterAnnotationView for clusters
-    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        if annotation is MKUserLocation { return nil }
-        
-        if annotation is Post.Annotation.Model {
-            let identifier = Post.Annotation.View.identifier
-            var annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? Post.Annotation.View
-            annotationView = annotationView ?? Post.Annotation.View(annotation: annotation, reuseIdentifier: identifier)
-            annotationView?.annotation = annotation
-            annotationView?.clusteringIdentifier = "post"
-            annotationView?.delegate = delegate?.annotationViewDelegate(for: annotationView!)
-            return annotationView
-        }
-        
-        if annotation is MKClusterAnnotation {
-            let identifier = Post.Annotation.ClusterView.identifier
-            var clusterView = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? Post.Annotation.ClusterView
-            clusterView = clusterView ?? Post.Annotation.ClusterView(annotation: annotation, reuseIdentifier: identifier)
-            clusterView?.annotation = annotation
-            clusterView?.delegate = delegate?.clusterViewDelegate(for: clusterView!)
-            return clusterView
-        }
-        
-        return nil
+    // MARK: - Interaction Control
+
+    /// Enables or disables user interaction on the map.
+    func setInteractionEnabled(_ isEnabled: Bool) {
+        mapView.isScrollEnabled = isEnabled
+        mapView.isZoomEnabled = isEnabled
+        mapView.isRotateEnabled = isEnabled
+        mapView.isPitchEnabled = isEnabled
     }
-    
+
     // MARK: - Annotation Management
     
     /// Returns the view associated with the specified annotation.

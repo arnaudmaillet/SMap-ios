@@ -23,7 +23,6 @@ final class HomeViewController: UIViewController {
     private var isMapMoving = false
     private var allowInteractionTimer: Timer?
     private(set) var contentView = UIView()
-    private(set) var blurView = UIVisualEffectView(effect: nil)
     
     var canInteract: Bool {
         return isInteractionAllowed
@@ -68,7 +67,7 @@ final class HomeViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = .black
         view.addSubview(contentView)
         contentView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -77,15 +76,6 @@ final class HomeViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        view.addSubview(blurView)
-        blurView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            blurView.topAnchor.constraint(equalTo: contentView.topAnchor),
-            blurView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
-            blurView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
-            blurView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor)
-        ])
-        blurView.alpha = 0
         setupMap()
         mapManager.delegate = self
         loadPosts()
@@ -124,13 +114,12 @@ final class HomeViewController: UIViewController {
         
         setLastSelectedAnnotation(annotationView.annotation)
         mapManager.setInteractionEnabled(false)
-        UIView.animate(withDuration: 0.5,
+        UIView.animate(withDuration: 0.4,
                        delay: 0,
                        usingSpringWithDamping: 0.8,
                        initialSpringVelocity: 0.5,
                        options: [.curveEaseOut]) {
-            self.blurView.effect = UIBlurEffect(style: .regular)
-            self.blurView.alpha = 1
+            self.contentView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
         }
         feedCoordinator?.presentFeed(for: posts, from: annotationView, in: mapManager.provideMapView(), image: image)
     }
@@ -151,5 +140,13 @@ final class HomeViewController: UIViewController {
             self?.isInteractionAllowed = true
             self?.isMapMoving = false
         }
+    }
+    
+    func currentAnnotationFrameInWindow() -> CGRect? {
+        guard let annotation = lastSelectedAnnotation,
+              let annotationView = mapManager.view(for: annotation) else {
+            return nil
+        }
+        return annotationView.convert(annotationView.bounds, to: view.window)
     }
 }

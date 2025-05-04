@@ -1,21 +1,14 @@
-//
-//  FeedController.swift
-//  SocialMap
-//
-//  Created by Arnaud Maillet on 16/04/2025.
-//
-
 import UIKit
 
 final class FeedViewController: UIViewController {
 
     // MARK: - UI Elements
 
-    private let background = UIView()
     private let contentView = UIView()
     private var collectionView: UICollectionView!
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var dismissGestureHandler: FeedDismissGestureHandler!
+    var cellControllers: [IndexPath: FeedCellController] = [:]
 
     public let transitionContainer = UIView()
 
@@ -32,6 +25,8 @@ final class FeedViewController: UIViewController {
     private let feedContent: FeedContent
     var originFrame: CGRect = .zero
     var originImage: UIImage?
+
+    weak var mapContainerView: UIView?
     weak var delegate: FeedControllerDelegate?
 
     // MARK: - Computed Properties
@@ -48,22 +43,6 @@ final class FeedViewController: UIViewController {
         return cell.imageView
     }
 
-    var currentOverlayView: UIView? {
-        guard let indexPath = collectionView.indexPathsForVisibleItems.first,
-              let cell = collectionView.cellForItem(at: indexPath) else {
-            return nil
-        }
-        return (cell as? FeedCell)?.overlayView
-    }
-
-    var feedBackgroundView: UIView {
-        background
-    }
-
-    func hideFeedContent() {
-        collectionView.isHidden = true
-    }
-
     // MARK: - Init
 
     init(feedContent: FeedContent, originImage: UIImage? = nil) {
@@ -74,31 +53,15 @@ final class FeedViewController: UIViewController {
 
     required init?(coder: NSCoder) { fatalError() }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        updateDismissOverlayView()
-    }
-
-    // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
         setupTransitionContainer()
-        setupOverlay()
         setupContentView()
         setupCollectionView()
         setupPanGesture()
     }
 
     // MARK: - Setup UI
-
-    private func setupOverlay() {
-        background.frame = view.bounds
-        background.backgroundColor = .black
-        background.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        background.alpha = 1
-        view.addSubview(background)
-    }
 
     private func setupContentView() {
         contentView.frame = view.bounds
@@ -112,19 +75,33 @@ final class FeedViewController: UIViewController {
         layout.itemSize = view.bounds.size
         layout.minimumLineSpacing = 0
 
-        collectionView = UICollectionView(frame: view.bounds, collectionViewLayout: layout)
+        collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.contentInsetAdjustmentBehavior = .never
         collectionView.isPagingEnabled = true
+        collectionView.alwaysBounceVertical = true
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.showsVerticalScrollIndicator = false
         collectionView.backgroundColor = .clear
         collectionView.register(FeedCell.self, forCellWithReuseIdentifier: "FeedCell")
+
         contentView.addSubview(collectionView)
+
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: contentView.topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor)
+        ])
     }
 
     private func setupPanGesture() {
-        dismissGestureHandler = FeedDismissGestureHandler(view: contentView, background: background, overlayView: nil)
+        dismissGestureHandler = FeedDismissGestureHandler(
+            view: contentView,
+            overlayView: nil,
+            mapContainerView: mapContainerView
+        )
         dismissGestureHandler.delegate = self
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(_:)))
         view.addGestureRecognizer(panGestureRecognizer)
@@ -137,8 +114,9 @@ final class FeedViewController: UIViewController {
         view.addSubview(transitionContainer)
     }
 
-    func updateDismissOverlayView() {
-        dismissGestureHandler.overlayView = currentOverlayView
+
+    func hideFeedContent() {
+        collectionView.isHidden = true
     }
 
     // MARK: - Gesture Handling
@@ -150,11 +128,13 @@ final class FeedViewController: UIViewController {
     // MARK: - Dismiss Transition (Private API for GestureHandler)
 
     func dismissToOrigin() {
-        guard let config = HeroDismissConfig.basic(from: self) else {
+        let overlay = currentOverlayView()
+
+        guard let config = HeroDismissConfig.basic(from: self, overlayView: overlay) else {
             dismiss(animated: false) { self.delegate?.feedDidDismiss() }
             return
         }
-        
+
         HeroDismissAnimator.animateDismiss(config: config, from: self) {}
     }
 
@@ -166,12 +146,56 @@ final class FeedViewController: UIViewController {
                        options: [.curveEaseOut],
                        animations: {
             self.contentView.transform = .identity
-            self.background.alpha = 0.4
-            self.currentOverlayView?.alpha = 1
         }, completion: { _ in
             self.contentView.center = position ?? self.contentView.center
             self.contentView.layer.cornerRadius = 0
-            self.background.alpha = 1
         })
+    }
+
+    // MARK: - ScrollView Gesture
+
+    func updateCurrentCellCornerRadius(scrollView: UIScrollView) {
+        guard let indexPath = collectionView.indexPathsForVisibleItems.first,
+              let cell = collectionView.cellForItem(at: indexPath) as? FeedCell else {
+            return
+        }
+
+        let offsetY = scrollView.contentOffset.y
+        let maxOffsetY = scrollView.contentSize.height - scrollView.bounds.height
+        let isOnFirstCell = indexPath.item == 0
+        let isOnLastCell = indexPath.item == posts.count - 1
+
+        var radius: CGFloat = 0
+
+        if isOnFirstCell && offsetY < 0 {
+            radius = min(abs(offsetY) * 0.75, 55)
+        } else if isOnLastCell && offsetY > maxOffsetY {
+            radius = min((offsetY - maxOffsetY) * 0.75, 55)
+        }
+
+        cell.applyCornerRadius(radius)
+    }
+    
+    func currentOverlayView() -> UIView? {
+        guard let indexPath = collectionView.indexPathsForVisibleItems.first,
+              let cell = collectionView.cellForItem(at: indexPath) as? FeedCell else {
+            return nil
+        }
+        return cell.overlayVC.view
+    }
+    
+    func injectOverlayController(_ vc: OverlayViewController, into containerView: UIView) {
+        addChild(vc)
+        containerView.addSubview(vc.view)
+        vc.view.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            vc.view.topAnchor.constraint(equalTo: containerView.topAnchor),
+            vc.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor),
+            vc.view.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            vc.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor)
+        ])
+
+        vc.didMove(toParent: self)
     }
 }

@@ -26,3 +26,4 @@ struct CodableCoordinate: Codable, Equatable {
         self.longitude = coordinate.longitude
     }
 }
+

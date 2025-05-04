@@ -8,13 +8,15 @@
 import UIKit
 
 extension UIView {
+    
+    /// Finds the nearest parent view controller in the responder chain.
     var parentViewController: UIViewController? {
         var responder: UIResponder? = self
-        while responder != nil {
-            if let vc = responder as? UIViewController {
-                return vc
+        while let currentResponder = responder {
+            if let viewController = currentResponder as? UIViewController {
+                return viewController
             }
-            responder = responder?.next
+            responder = currentResponder.next
         }
         return nil
     }

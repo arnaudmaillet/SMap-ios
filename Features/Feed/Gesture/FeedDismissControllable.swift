@@ -10,5 +10,4 @@ import UIKit
 protocol FeedDismissControllable: AnyObject {
     func triggerDismiss()
     func resetDismissAnimation(to position: CGPoint?)
-    func updateBackgroundDuringDismissGesture(progress: CGFloat)
 }

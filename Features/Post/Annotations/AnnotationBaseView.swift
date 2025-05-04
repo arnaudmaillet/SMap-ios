@@ -26,6 +26,7 @@ extension Post.Annotation {
         
         override init(annotation: MKAnnotation?, reuseIdentifier: String?) {
             super.init(annotation: annotation, reuseIdentifier: reuseIdentifier)
+            setupGestureRecognizer()
         }
         
         required init?(coder: NSCoder) {
@@ -43,12 +44,6 @@ extension Post.Annotation {
             newPreview.configure(with: post, size: size)
             newPreview.isUserInteractionEnabled = true
             
-            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleInteraction(_:)))
-            gesture.minimumPressDuration = 0
-            gesture.delegate = self
-            gesture.cancelsTouchesInView = false
-            newPreview.addGestureRecognizer(gesture)
-            
             addSubview(newPreview)
             preview = newPreview
             
@@ -58,38 +53,23 @@ extension Post.Annotation {
         
         // MARK: - Gesture Handling
         
+        private func setupGestureRecognizer() {
+            let gesture = UILongPressGestureRecognizer(target: self, action: #selector(handleInteraction(_:)))
+            gesture.minimumPressDuration = 0
+            gesture.delegate = self
+            gesture.cancelsTouchesInView = false
+            self.addGestureRecognizer(gesture)
+        }
+        
         /// Handles the interaction (tap, drag, multitouch) on the preview.
         @objc private func handleInteraction(_ gesture: UILongPressGestureRecognizer) {
-            let location = gesture.location(in: self)
             
             switch gesture.state {
             case .began:
-                initialTouchPoint = location
-                isMultiTouchInteraction = false
                 animateScale(0.95)
-                
-            case .changed:
-                if gesture.numberOfTouches > 1 {
-                    if !isMultiTouchInteraction {
-                        isMultiTouchInteraction = true
-                        animateScale(1.0)
-                    }
-                    return
-                }
-                guard let start = initialTouchPoint else { return }
-                let distance = hypot(location.x - start.x, location.y - start.y)
-                if distance > 10 {
-                    animateScale(1.0)
-                }
-                
             case .ended:
                 animateScale(1.0)
-                guard !isMultiTouchInteraction, let start = initialTouchPoint else { return }
-                let distance = hypot(location.x - start.x, location.y - start.y)
-                if distance < 10 {
-                    handleTap()
-                }
-                
+                handleTap()
             case .cancelled, .failed:
                 animateScale(1.0)
                 
@@ -100,7 +80,7 @@ extension Post.Annotation {
         
         /// Handles tap action on the annotation view.
         func handleTap() {
-
+            
         }
         
         // MARK: - Animations

@@ -10,15 +10,10 @@ import Foundation
 extension FeedViewController: FeedDismissControllable {
     func triggerDismiss() {
         dismissToOrigin()
-        delegate?.resetMapAppearance()
     }
 
     func resetDismissAnimation(to position: CGPoint?) {
         resetContentViewPosition(to: position)
-    }
-
-    func updateBackgroundDuringDismissGesture(progress: CGFloat) {
-        delegate?.updateBackgroundDuringDismissGesture(progress: progress)
     }
 }
 

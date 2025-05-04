@@ -13,11 +13,11 @@ final class FeedDismissGestureHandler {
 
     weak var delegate: FeedDismissControllable?
     weak var overlayView: UIView?
+    weak var mapContainerView: UIView?
 
     // MARK: - Private Properties
 
     private weak var view: UIView?
-    private weak var background: UIView?
 
     private var hasLockedDirection = false
     private var isHorizontalSwipe = false
@@ -26,10 +26,10 @@ final class FeedDismissGestureHandler {
 
     // MARK: - Init
 
-    init(view: UIView, background: UIView, overlayView: UIView?) {
+    init(view: UIView, overlayView: UIView?, mapContainerView: UIView?) {
         self.view = view
-        self.background = background
         self.overlayView = overlayView
+        self.mapContainerView = mapContainerView
     }
 
     // MARK: - Gesture Handling
@@ -58,6 +58,7 @@ final class FeedDismissGestureHandler {
         isDragging = false
         hasLockedDirection = false
         isHorizontalSwipe = false
+        mapContainerView?.alpha = 0.6
     }
 
     private func handlePanChanged(view: UIView, translation: CGPoint) {
@@ -93,6 +94,7 @@ final class FeedDismissGestureHandler {
 
     private func handlePanEnded(translation: CGPoint) {
         if isDragging {
+            
             let totalDrag = hypot(translation.x, translation.y)
             let dismissThreshold: CGFloat = 160
 
@@ -121,9 +123,8 @@ final class FeedDismissGestureHandler {
         let adjustedY = dampedY / scale
 
         view.transform = CGAffineTransform(translationX: adjustedX, y: adjustedY).scaledBy(x: scale, y: scale)
-        background?.alpha = .interpolate(from: 0.4, to: 0.2, progress: progress)
         overlayView?.alpha = .interpolate(from: 1.0, to: 0.4, progress: progress)
-        delegate?.updateBackgroundDuringDismissGesture(progress: progress)
+        mapContainerView?.alpha = .interpolate(from: 0.6, to: 1, progress: progress)
     }
 
     private func damped(_ value: CGFloat, factor: CGFloat) -> CGFloat {

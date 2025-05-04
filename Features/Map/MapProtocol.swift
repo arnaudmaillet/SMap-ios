@@ -1,5 +1,5 @@
 //
-//  MapManagerProtocol.swift
+//  MapProtocol.swift
 //  SocialMap
 //
 //  Created by Arnaud Maillet on 28/04/2025.
@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-protocol MapManagerProtocol: AnyObject {
+protocol MapProtocol: AnyObject {
     func annotationViewDelegate(for view: Post.Annotation.View) -> AnnotationViewDelegate?
     func clusterViewDelegate(for view: Post.Annotation.ClusterView) -> ClusterViewDelegate?
     

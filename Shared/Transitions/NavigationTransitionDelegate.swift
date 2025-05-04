@@ -8,21 +8,19 @@
 import UIKit
 
 final class NavigationTransitionDelegate: NSObject, UIViewControllerTransitioningDelegate {
+    private let originView: UIView
     private let originFrame: CGRect
-    private let image: UIImage
+    private let post: Post.Model
 
-    init(originFrame: CGRect, image: UIImage) {
+    init(originView: UIView, originFrame: CGRect, post: Post.Model) {
+        self.originView = originView
         self.originFrame = originFrame
-        self.image = image
+        self.post = post
     }
 
     func animationController(forPresented presented: UIViewController,
                              presenting: UIViewController,
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return NavigationTransition(originFrame: originFrame, image: image, isPresenting: true)
-    }
-
-    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return NavigationTransition(originFrame: originFrame, image: image, isPresenting: false)
+        return HeroPresentAnimator(originView: originView, originFrame: originFrame, post: post, isPresenting: true)
     }
 }
