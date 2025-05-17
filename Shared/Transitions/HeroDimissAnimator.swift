@@ -15,10 +15,10 @@ struct HeroDismissConfig {
     let finalCornerRadius: CGFloat
     let finalBorderWidth: CGFloat
     let finalBorderColor: CGColor
-
+    
     static func basic(from controller: FeedViewController, overlayView: UIView?) -> HeroDismissConfig? {
         guard let postImageView = controller.currentPostImageView else { return nil }
-
+        
         return HeroDismissConfig(
             sourceImageView: postImageView,
             destinationImage: controller.originImage,
@@ -31,8 +31,31 @@ struct HeroDismissConfig {
     }
 }
 
-final class HeroDismissAnimator {
+final class HeroDismissAnimatorTransition: NSObject, UIViewControllerAnimatedTransitioning {
+    private let config: HeroDismissConfig
+    
+    init(config: HeroDismissConfig) {
+        self.config = config
+    }
+    
+    func transitionDuration(using context: UIViewControllerContextTransitioning?) -> TimeInterval {
+        return 0.35
+    }
+    
+    func animateTransition(using context: UIViewControllerContextTransitioning) {
+        guard let fromVC = context.viewController(forKey: .from) else {
+            context.completeTransition(false)
+            return
+        }
+        
+        HeroDismissAnimator.animateDismiss(config: config, from: fromVC) {
+            context.completeTransition(true)
+        }
+    }
+}
 
+final class HeroDismissAnimator {
+    
     static func animateDismiss(config: HeroDismissConfig, from controller: UIViewController, completion: @escaping () -> Void) {
         let container = controller.view
         
@@ -110,11 +133,16 @@ final class HeroDismissAnimator {
                 }
             }
         }, completion: { _ in
-            if let feedController = controller as? FeedViewController {
+            if let feedController = controller as? FeedViewController,
+               let homeVC = feedController.delegate as? HomeViewController,
+               let annotation = homeVC.lastSelectedAnnotation {
+
                 feedController.delegate?.feedDidDismiss()
-            }
-            controller.dismiss(animated: false) {
-                config.overlayView?.isHidden = false
+
+                homeVC.waitUntilAnnotationIsRendered(annotation) {
+                    completion() // ici seulement, la transition est validée
+                }
+            } else {
                 completion()
             }
         })

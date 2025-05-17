@@ -20,7 +20,6 @@ extension HomeViewController: FeedControllerDelegate {
     func feedDidDismiss() {
         self.setMapInteractionEnabled(true)
         refreshLastSelectedAnnotation()
-        resetLastSelectedAnnotation()
     }
     
     func animateMapResetDuringDismiss(progress: CGFloat) {

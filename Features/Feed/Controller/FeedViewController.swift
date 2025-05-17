@@ -5,7 +5,7 @@ final class FeedViewController: UIViewController {
     // MARK: - UI Elements
 
     private let contentView = UIView()
-    private var collectionView: UICollectionView!
+    var collectionView: UICollectionView!
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var dismissGestureHandler: FeedDismissGestureHandler!
     var cellControllers: [IndexPath: FeedCellController] = [:]
@@ -128,14 +128,7 @@ final class FeedViewController: UIViewController {
     // MARK: - Dismiss Transition (Private API for GestureHandler)
 
     func dismissToOrigin() {
-        let overlay = currentOverlayView()
-
-        guard let config = HeroDismissConfig.basic(from: self, overlayView: overlay) else {
-            dismiss(animated: false) { self.delegate?.feedDidDismiss() }
-            return
-        }
-
-        HeroDismissAnimator.animateDismiss(config: config, from: self) {}
+        dismiss(animated: true)
     }
 
     func resetContentViewPosition(to position: CGPoint?) {
@@ -197,5 +190,11 @@ final class FeedViewController: UIViewController {
         ])
 
         vc.didMove(toParent: self)
+    }
+    
+    var isInteractingWithReactionsScroll = false {
+        didSet {
+            collectionView.isScrollEnabled = !isInteractingWithReactionsScroll
+        }
     }
 }

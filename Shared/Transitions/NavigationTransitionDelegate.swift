@@ -23,4 +23,14 @@ final class NavigationTransitionDelegate: NSObject, UIViewControllerTransitionin
                              source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return HeroPresentAnimator(originView: originView, originFrame: originFrame, post: post, isPresenting: true)
     }
+
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        guard let feedVC = dismissed as? FeedViewController,
+              let config = HeroDismissConfig.basic(from: feedVC, overlayView: feedVC.currentOverlayView())
+        else {
+            return nil
+        }
+
+        return HeroDismissAnimatorTransition(config: config)
+    }
 }

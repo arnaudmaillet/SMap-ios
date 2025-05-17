@@ -16,7 +16,7 @@ final class HomeViewController: UIViewController {
     private let viewModel: HomeViewModel
     private let mapManager: MapManager
     private weak var feedCoordinator: FeedCoordinatorProtocol?
-    private var lastSelectedAnnotation: MKAnnotation?
+    var lastSelectedAnnotation: MKAnnotation?
     private(set) var posts: [Post.Model]
     
     private var isInteractionAllowed = true
@@ -91,9 +91,6 @@ final class HomeViewController: UIViewController {
         }
     }
 
-    func resetLastSelectedAnnotation() {
-        lastSelectedAnnotation = nil
-    }
 
     func refreshLastSelectedAnnotation() {
         guard let annotation = lastSelectedAnnotation else { return }
@@ -114,13 +111,6 @@ final class HomeViewController: UIViewController {
         
         setLastSelectedAnnotation(annotationView.annotation)
         mapManager.setInteractionEnabled(false)
-        UIView.animate(withDuration: 0.4,
-                       delay: 0,
-                       usingSpringWithDamping: 0.8,
-                       initialSpringVelocity: 0.5,
-                       options: [.curveEaseOut]) {
-            self.contentView.transform = CGAffineTransform(scaleX: 0.95, y: 0.95)
-        }
         feedCoordinator?.presentFeed(for: posts, from: annotationView, in: mapManager.provideMapView(), image: image)
     }
     
@@ -148,5 +138,9 @@ final class HomeViewController: UIViewController {
             return nil
         }
         return annotationView.convert(annotationView.bounds, to: view.window)
+    }
+    
+    func waitUntilAnnotationIsRendered(_ annotation: MKAnnotation, completion: @escaping () -> Void) {
+        mapManager.waitForAnnotationRender(annotation, completion: completion)
     }
 }

@@ -14,7 +14,9 @@ final class MapManager: NSObject {
     
     private let mapView: MKMapView
     weak var delegate: MapProtocol?
+    private var annotationRenderCallbacks: [String: () -> Void] = [:]
     var selectedAnnotations: [MKAnnotation] { mapView.selectedAnnotations }
+    var onAnnotationViewRendered: ((MKAnnotation) -> Void)?
     
     // MARK: - Initialization
     
@@ -104,5 +106,21 @@ final class MapManager: NSObject {
     /// Deselects annotations with optional animation.
     func deselectAnnotations(_ annotations: [MKAnnotation], animated: Bool) {
         annotations.forEach { mapView.deselectAnnotation($0, animated: animated) }
+    }
+    
+    // Appelé depuis HomeViewController ou autre contrôleur pour attendre l’apparition
+    func waitForAnnotationRender(_ annotation: MKAnnotation, completion: @escaping () -> Void) {
+        let key = annotation.annotationIdentifier
+        annotationRenderCallbacks[key] = completion
+    }
+
+    // À appeler dans mapView(_:viewFor:)
+    func handleViewRendering(for annotation: MKAnnotation) {
+        let key = annotation.annotationIdentifier
+        if let callback = annotationRenderCallbacks.removeValue(forKey: key) {
+            DispatchQueue.main.async {
+                callback()
+            }
+        }
     }
 }

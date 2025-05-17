@@ -14,10 +14,13 @@ extension FeedViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath) as! FeedCell
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "FeedCell", for: indexPath) as? FeedCell else {
+            fatalError()
+        }
+        
         let post = posts[indexPath.item]
-
         let controller = cellControllers[indexPath] ?? FeedCellController()
+        
         controller.configure(cell: cell, with: post, safeAreaInsets: view.safeAreaInsets)
         cellControllers[indexPath] = controller
         

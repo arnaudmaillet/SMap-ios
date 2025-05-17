@@ -46,7 +46,7 @@ extension UIImage {
             guard verticalFraction > 0, horizontalFraction > 0,
                   verticalIndex >= 0, verticalIndex < verticalFraction,
                   horizontalIndex >= 0, horizontalIndex < horizontalFraction else {
-                print("⚠️ UIImage.averageBrightness: Indices de fraction hors limites")
+                //print("⚠️ UIImage.averageBrightness: Indices de fraction hors limites")
                 return nil
             }
 

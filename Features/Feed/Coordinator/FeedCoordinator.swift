@@ -17,6 +17,7 @@ final class FeedCoordinator: FeedCoordinatorProtocol {
     // MARK: - Properties
 
     private weak var presentingViewController: (UIViewController & FeedControllerDelegate)?
+    private var transitionDelegate: UIViewControllerTransitioningDelegate?
 
     // MARK: - Initialization
 
@@ -57,6 +58,7 @@ final class FeedCoordinator: FeedCoordinatorProtocol {
             originFrame: frameInWindow,
             post: selectedPost
         )
+        self.transitionDelegate = transitionDelegate
         feedViewController.transitioningDelegate = transitionDelegate
         
         presentingViewController?.present(feedViewController, animated: true)
