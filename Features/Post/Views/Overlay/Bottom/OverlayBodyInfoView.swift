@@ -1,5 +1,5 @@
 //
-//  OverlayBottomView.swift
+//  OverlayBottomInfoView.swift
 //  SocialMap
 //
 //  Created by Arnaud Maillet on 30/04/2025.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class OverlayBottomView: UIView {
+final class OverlayBottomInfoView: UIView {
 
     // MARK: - Subviews
 

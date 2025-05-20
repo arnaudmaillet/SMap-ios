@@ -7,9 +7,16 @@
 
 import UIKit
 
-final class OverlayTopView: UIView {
+final class OverlayHeaderView: UIView {
     
     private var topConstraint: NSLayoutConstraint?
+    
+    private let backButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.tintColor = .white
+        return button
+    }()
     
     private let recommendationTag: UILabel = {
         let label = UILabel()
@@ -113,12 +120,16 @@ final class OverlayTopView: UIView {
         userInfoStack.axis = .horizontal
         userInfoStack.spacing = 8
         userInfoStack.alignment = .center
+        
+        backButton.setContentHuggingPriority(.required, for: .horizontal)
+        backButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
 
-        let mainStack = UIStackView(arrangedSubviews: [recommendationTag, userInfoStack])
+        let mainStack = UIStackView(arrangedSubviews: [backButton, recommendationTag, userInfoStack])
         mainStack.axis = .horizontal
-        mainStack.spacing = 12
+        mainStack.spacing = 8
         mainStack.distribution = .fillProportionally
+        
         mainStack.translatesAutoresizingMaskIntoConstraints = false
         addSubview(mainStack)
         
@@ -179,5 +190,10 @@ final class OverlayTopView: UIView {
                 self.followButton.titleLabel?.alpha = 1
             })
         }
+    }
+    
+    
+    var backButtonInstance: UIButton {
+        return backButton
     }
 }

@@ -18,6 +18,7 @@ final class OverlayTopViewController: UIViewController {
     // MARK: - Callbacks
 
     var onFollowStateChanged: ((Bool) -> Void)?
+    var onBackTapped: (() -> Void)?
 
     // MARK: - Init
 
@@ -41,6 +42,7 @@ final class OverlayTopViewController: UIViewController {
         super.viewDidLoad()
         overlayView.configure(with: post)
 //        overlayView.followButton.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
+        overlayView.backButtonInstance.addTarget(self, action: #selector(handleBackTapped), for: .touchUpInside)
     }
 
     // MARK: - Public API
@@ -70,6 +72,10 @@ final class OverlayTopViewController: UIViewController {
                        options: [.curveEaseOut]) {
             self.overlayView.followButton.transform = .identity
         }
+    }
+    
+    @objc private func handleBackTapped() {
+        onBackTapped?()
     }
 }
 
