@@ -8,17 +8,17 @@
 extension ProfileFeature.Container {
     final class ProfileContainer: FeatureContainer {
         // MARK: - Typealiases
-        typealias PostPreview = PostFeature.Domain.Model.PostPreview
+        typealias PostPreview = PostNamespace.Domain.Entities.PostPreview
 
-        typealias PostRepository = PostFeature.Data.Repository.PostRepository
-        typealias LocalPostRepository = PostFeature.Data.Repository.LocalPostRepository
-        typealias RemotePostRepository = PostFeature.Data.Repository.RemotePostRepository
+        typealias PostRepository = PostNamespace.Data.Repository.PostRepository
+        typealias LocalPostRepository = PostNamespace.Data.Repository.LocalPostRepository
+        typealias RemotePostRepository = PostNamespace.Data.Repository.RemotePostRepository
         
         typealias PostAnnotation = MapFeature.Domain.Model.PostAnnotation
         typealias Annotation = MapFeature.Domain.Model.Annotation
 
-        typealias FetchPostPreviewsUseCase = PostFeature.Domain.UseCase.FetchPostPreviewsUseCase
-        typealias DefaultFetchPostPreviewsUseCase = PostFeature.Domain.UseCase.DefaultFetchPostPreviewsUseCase
+        typealias FetchPostPreviewsUseCase = PostNamespace.Application.UseCases.FetchPostPreviewsUseCase
+        typealias DefaultFetchPostPreviewsUseCase = PostNamespace.Application.UseCases.DefaultFetchPostPreviewsUseCase
 
         typealias ProfileViewModel = ProfileFeature.UI.ViewModel.ProfileViewModel
 
@@ -27,7 +27,7 @@ extension ProfileFeature.Container {
 
         // MARK: - Init
         init(env: AppEnvironment) {
-            if env == .local {
+            if env == .mock {
                 self.postRepository = LocalPostRepository()
             } else {
                 let apiClient = DefaultAPIClient(env: env)

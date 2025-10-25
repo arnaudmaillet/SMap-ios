@@ -14,8 +14,8 @@ extension FeedFeature.UI.ViewController {
         UICollectionViewDelegate,
         UIScrollViewDelegate
     {
-        typealias Post = PostFeature.Domain.Model.Post
-        typealias MediaContent = MediaFeature.Domain.Model.MediaContent
+        typealias Post = PostNamespace.Domain.Entities.Post
+        typealias Media = MediaFeature.Domain.Entities.Media
         typealias Reaction = FeedFeature.UI.View.ReactionView.Reaction
         typealias OverlayView = FeedFeature.UI.View.OverlayView
 

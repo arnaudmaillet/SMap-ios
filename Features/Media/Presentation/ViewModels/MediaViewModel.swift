@@ -10,9 +10,9 @@ import Combine
 import AVFoundation
 import UIKit
 
-extension MediaFeature.UI.ViewModels {
+extension MediaNamespace.Presentation.ViewModels {
     final class MediaViewModel: ObservableObject {
-        typealias Media = MediaFeature.Domain.Entities.Media
+        typealias Media = MediaNamespace.Domain.Entities.Media
 
         @Published private(set) var image: UIImage?
         @Published private(set) var isPlayerReady: Bool = false

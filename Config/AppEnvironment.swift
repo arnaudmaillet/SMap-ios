@@ -7,37 +7,42 @@
 
 import Foundation
 
-enum Environment: String {
+enum AppEnvironment: String {
     case prod
     case dev
     case mock
-
-    static var current: Environment {
-        let raw = ProcessInfo.processInfo.environment["APP_ENV"] ?? "prod"
-        return Environment(rawValue: raw.lowercased()) ?? .prod
-    }
-}
-
-enum AppEnvironment {
-    static var environment: Environment {
-        let raw = ProcessInfo.processInfo.environment["APP_ENV"] ?? "prod"
-        return Environment(rawValue: raw.lowercased()) ?? .prod
-    }
-
-    static var postRepository: PostRepository {
-        switch environment {
-        case .prod, .dev:
-            return PostRepositoryImpl(
-                remote: PostRemoteDataSourceImpl(client: APIClient()),
-                local: InMemoryPostCache()
-            )
+    
+    /// Base URL pour les appels API (futur)
+    var baseURL: URL {
+        switch self {
+        case .prod:
+            return URL(string: "https://api.socialmap.app")!
+        case .dev:
+            return URL(string: "https://dev.socialmap.app")!
         case .mock:
-            return PostRepositoryImpl(
-                remote: PostRemoteDataSourceImpl(client: APIClient()),
-                local: InMemoryPostCache(),
-                mock: PostMockDataSource(),
-                useMock: true
-            )
+            return URL(string: "https://mock.local")!
         }
     }
+    
+    var dataSourceConfig: AppDataSourceConfig {
+            switch self {
+            case .prod:
+                return .init(defaults: .init(
+                    globalDelay: 0,
+                    shouldSimulateFailure: false
+                ))
+
+            case .dev:
+                return .init(defaults: .init(
+                    globalDelay: 0,
+                    shouldSimulateFailure: false
+                ))
+
+            case .mock:
+                return .init(defaults: .init(
+                    globalDelay: 0,
+                    shouldSimulateFailure: false
+                ))
+            }
+        }
 }

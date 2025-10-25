@@ -18,7 +18,7 @@
 			);
 			target = 51B623FB2DA57B8D00B14397 /* SocialMap */;
 		};
-		51D7045D2DBEC8B600C5E66F /* Exceptions for "Shared" folder in "SocialMap" target */ = {
+		51D7045D2DBEC8B600C5E66F /* Exceptions for "Shared(old)" folder in "SocialMap" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Transitions/README.md,
@@ -28,7 +28,7 @@
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
-		51D7045E2DBEC8B600C5E66F /* Exceptions for "Shared" folder in "Compile Sources" phase from "SocialMap" target */ = {
+		51D7045E2DBEC8B600C5E66F /* Exceptions for "Shared(old)" folder in "Compile Sources" phase from "SocialMap" target */ = {
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 51B623F82DA57B8D00B14397 /* Sources */;
 			membershipExceptions = (
@@ -38,13 +38,18 @@
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		5128E4312DA5C05F008B0F54 /* Shared */ = {
+		5119D6E92E94CB1500B68BC1 /* Service */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Service;
+			sourceTree = "<group>";
+		};
+		5128E4312DA5C05F008B0F54 /* Shared(old) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				51D7045D2DBEC8B600C5E66F /* Exceptions for "Shared" folder in "SocialMap" target */,
-				51D7045E2DBEC8B600C5E66F /* Exceptions for "Shared" folder in "Compile Sources" phase from "SocialMap" target */,
+				51D7045D2DBEC8B600C5E66F /* Exceptions for "Shared(old)" folder in "SocialMap" target */,
+				51D7045E2DBEC8B600C5E66F /* Exceptions for "Shared(old)" folder in "Compile Sources" phase from "SocialMap" target */,
 			);
-			path = Shared;
+			path = "Shared(old)";
 			sourceTree = "<group>";
 		};
 		5128E4CA2DA6C4E2008B0F54 /* Config */ = {
@@ -57,14 +62,24 @@
 			path = Mock;
 			sourceTree = "<group>";
 		};
+		512B38F12E9FFA7A00701BFA /* Features */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Features;
+			sourceTree = "<group>";
+		};
+		51A188302E9CAA2500A548E3 /* Container */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Container;
+			sourceTree = "<group>";
+		};
 		51B624142DA57D5400B14397 /* App */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = App;
 			sourceTree = "<group>";
 		};
-		51B624152DA57E8900B14397 /* Features */ = {
+		51B624152DA57E8900B14397 /* Features(old) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = Features;
+			path = "Features(old)";
 			sourceTree = "<group>";
 		};
 		51B624172DA57E9D00B14397 /* Ressources */ = {
@@ -78,6 +93,16 @@
 		51B624192DA57F0900B14397 /* Core */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = Core;
+			sourceTree = "<group>";
+		};
+		51C8EF3D2EA56B53001B68A3 /* Shared */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		51ED8C0C2EA5765700766A2B /* Macros */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = Macros;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -96,14 +121,19 @@
 		51B623F32DA57B8D00B14397 = {
 			isa = PBXGroup;
 			children = (
+				51ED8C0C2EA5765700766A2B /* Macros */,
+				512B38F12E9FFA7A00701BFA /* Features */,
+				51A188302E9CAA2500A548E3 /* Container */,
+				5119D6E92E94CB1500B68BC1 /* Service */,
 				51B624142DA57D5400B14397 /* App */,
 				5128E4CA2DA6C4E2008B0F54 /* Config */,
 				51B624192DA57F0900B14397 /* Core */,
-				51B624152DA57E8900B14397 /* Features */,
+				51B624152DA57E8900B14397 /* Features(old) */,
 				5128E5242DAD5D0B008B0F54 /* Mock */,
 				51B623FD2DA57B8D00B14397 /* Products */,
 				51B624172DA57E9D00B14397 /* Ressources */,
-				5128E4312DA5C05F008B0F54 /* Shared */,
+				5128E4312DA5C05F008B0F54 /* Shared(old) */,
+				51C8EF3D2EA56B53001B68A3 /* Shared */,
 			);
 			sourceTree = "<group>";
 		};
@@ -131,13 +161,18 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				5128E4312DA5C05F008B0F54 /* Shared */,
+				5119D6E92E94CB1500B68BC1 /* Service */,
+				5128E4312DA5C05F008B0F54 /* Shared(old) */,
 				5128E4CA2DA6C4E2008B0F54 /* Config */,
 				5128E5242DAD5D0B008B0F54 /* Mock */,
+				512B38F12E9FFA7A00701BFA /* Features */,
+				51A188302E9CAA2500A548E3 /* Container */,
 				51B624142DA57D5400B14397 /* App */,
-				51B624152DA57E8900B14397 /* Features */,
+				51B624152DA57E8900B14397 /* Features(old) */,
 				51B624172DA57E9D00B14397 /* Ressources */,
 				51B624192DA57F0900B14397 /* Core */,
+				51C8EF3D2EA56B53001B68A3 /* Shared */,
+				51ED8C0C2EA5765700766A2B /* Macros */,
 			);
 			name = SocialMap;
 			packageProductDependencies = (

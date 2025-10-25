@@ -25,5 +25,9 @@ struct CodableCoordinate: Codable, Equatable {
         self.latitude = coordinate.latitude
         self.longitude = coordinate.longitude
     }
+    
+    func toCLLocationCoordinate2D() -> CLLocationCoordinate2D {
+        return CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+    }
 }
 

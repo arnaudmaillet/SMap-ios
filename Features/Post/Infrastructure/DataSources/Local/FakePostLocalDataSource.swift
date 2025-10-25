@@ -7,9 +7,9 @@
 
 import Foundation
 
-extension PostFeature.Infrastructure.DataSources {
-    final class FakePostLocalDataSource: PostFeature.Infrastructure.DataSources.PostLocalDataSource {
-        typealias Post = PostFeature.Domain.Entities.Post
+extension PostNamespace.Infrastructure.DataSources {
+    final class FakePostLocalDataSource: PostNamespace.Infrastructure.DataSources.PostLocalDataSource {
+        typealias Post = PostNamespace.Domain.Entities.Post
         
         private var store: [String: Post] = [:]
 

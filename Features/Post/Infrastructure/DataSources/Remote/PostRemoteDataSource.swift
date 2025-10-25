@@ -7,9 +7,11 @@
 
 import Foundation
 
-extension PostFeature.Infrastructure.DataSources {
+extension PostNamespace.Infrastructure.DataSources {
     protocol PostRemoteDataSource {
-        typealias Post = PostFeature.Domain.Entities.Post
-        func getPost(by id: String) async throws -> Post
+        typealias Post = PostNamespace.Domain.Entities.Post
+        typealias PostId = PostNamespace.Domain.ValueObjects.PostId
+
+        func getPost(by id: PostId) async throws -> Post
     }
 }

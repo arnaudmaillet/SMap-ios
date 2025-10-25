@@ -21,7 +21,7 @@ extension FeedFeature.UI.ViewController {
             embeddedController = nil
         }
         
-        func configure(with post: PostFeature.Domain.Model.Post, in parent: UIViewController) {
+        func configure(with post: PostNamespace.Domain.Entities.Post, in parent: UIViewController) {
             cleanupEmbeddedController()
 
             let controller = FeedPostViewController(post: post)

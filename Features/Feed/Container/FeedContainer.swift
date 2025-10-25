@@ -8,17 +8,17 @@
 extension FeedFeature.Container {
     final class FeedContainer: FeatureContainer {
         // MARK: - Typealiases
-        typealias Post = PostFeature.Domain.Model.Post
+        typealias Post = PostNamespace.Domain.Entities.Post
         
         typealias PostAnnotation = MapFeature.Domain.Model.PostAnnotation
         typealias Annotation = MapFeature.Domain.Model.Annotation
         
-        typealias PostRepository = PostFeature.Data.Repository.PostRepository
-        typealias LocalPostRepository = PostFeature.Data.Repository.LocalPostRepository
-        typealias RemotePostRepository = PostFeature.Data.Repository.RemotePostRepository
+        typealias PostRepository = PostNamespace.Data.Repository.PostRepository
+        typealias LocalPostRepository = PostNamespace.Data.Repository.LocalPostRepository
+        typealias RemotePostRepository = PostNamespace.Data.Repository.RemotePostRepository
 
-        typealias FetchPostsUseCase = PostFeature.Domain.UseCase.FetchPostsUseCase
-        typealias DefaultFetchPostsUseCase = PostFeature.Domain.UseCase.DefaultFetchPostsUseCase
+        typealias FetchPostsUseCase = PostNamespace.Application.UseCases.FetchPostsUseCase
+        typealias DefaultFetchPostsUseCase = PostNamespace.Application.UseCases.DefaultFetchPostsUseCase
         
         typealias FeedViewModel = FeedFeature.UI.ViewModel.FeedViewModel
 
@@ -27,7 +27,7 @@ extension FeedFeature.Container {
 
         // MARK: - Init
         init(env: AppEnvironment) {
-            if env == .local {
+            if env == .mock {
                 self.postRepository = LocalPostRepository()
             } else {
                 let apiClient = DefaultAPIClient(env: env)

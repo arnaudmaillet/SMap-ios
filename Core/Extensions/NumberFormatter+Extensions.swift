@@ -8,7 +8,7 @@
 import Foundation
 
 enum FormatterUtils {
-    static func formatFollowers(_ count: Int) -> String {
+    static func format(_ count: Int) -> String {
         switch count {
         case 1_000_000...:
             return String(format: "%.1fM", Double(count) / 1_000_000)

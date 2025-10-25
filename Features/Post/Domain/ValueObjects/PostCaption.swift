@@ -7,10 +7,16 @@
 
 import Foundation
 
-struct Caption: Equatable {
-    let value: String?
-    
-    init(_ value: String?) {
-        self.value = value
+extension PostNamespace.Domain.ValueObjects {
+    struct Caption: Equatable {
+        let value: String
+
+        init(_ value: String) {
+            self.value = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+
+        var isEmpty: Bool {
+            return value.isEmpty
+        }
     }
 }

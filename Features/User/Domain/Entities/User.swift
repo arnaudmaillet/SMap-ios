@@ -8,9 +8,9 @@
 extension UserFeature.Domain.Entities {
     struct User: Identifiable, Equatable {
         typealias ValueObjects = UserFeature.Domain.ValueObjects
-        let id: ValueObjects.UserID
+        let id: ValueObjects.UserId
         let username: ValueObjects.Username
-        let avatar: ValueObjects.AvatarURL
+        let avatar: ValueObjects.AvatarUrl
         let bio: ValueObjects.Bio
         let followers: Int
         let following: Int

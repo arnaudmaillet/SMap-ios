@@ -7,11 +7,11 @@
 
 import Foundation
 
-extension MediaFeature.Domain.Entities {
-    struct MediaContent: Identifiable, Equatable {
-        typealias MediaId = MediaFeature.Domain.ValueObjects.MediaId
-        typealias MediaType = MediaFeature.Domain.ValueObjects.MediaType
-        typealias MediaDimensions = MediaFeature.Domain.ValueObjects.MediaDimensions
+extension MediaNamespace.Domain.Entities {
+    struct Media: Identifiable, Equatable {
+        typealias MediaId = MediaNamespace.Domain.ValueObjects.MediaId
+        typealias MediaType = MediaNamespace.Domain.ValueObjects.MediaType
+        typealias MediaDimensions = MediaNamespace.Domain.ValueObjects.MediaDimensions
         
         let id: MediaId
         let type: MediaType

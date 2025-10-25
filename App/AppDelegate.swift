@@ -18,10 +18,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     ) -> Bool {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
-        let appCoordinator = AppCoordinator(window: window)
-        self.appCoordinator = appCoordinator
-        appCoordinator.start()
         
+        let appCoordinator = AppCoordinator(window: window, env: .mock)
+        self.appCoordinator = appCoordinator
+        appCoordinator.start(destination: .home)
         return true
     }
 }

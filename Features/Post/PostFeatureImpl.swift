@@ -7,14 +7,17 @@
 
 import Foundation
 
-extension PostFeature {
+extension PostNamespace {
     struct PostFeatureImpl: PostFeature {
-        let assembler: DI.PostAssembler
-        let getPostUseCase: PostFeature.Application.UseCases.GetPostUseCase
+        let assembler: PostNamespace.DI.PostAssembler
+        let getPostUseCase: PostNamespace.Application.UseCases.GetPostUseCase
 
         init(environment: AppEnvironment) {
-            let config = environment.postConfig
-            self.assembler = DI.PostAssembler(environment: environment, dataSourceConfig: config)
+            let config = environment.dataSourceConfig
+            self.assembler = DI.PostAssembler(
+                environment: environment,
+                dataSourceConfig: config.post
+            )
             self.getPostUseCase = .init(repository: assembler.makeRepository())
         }
     }

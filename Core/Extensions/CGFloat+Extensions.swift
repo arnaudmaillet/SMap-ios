@@ -21,4 +21,9 @@ extension CGFloat {
     static func interpolate(from start: CGFloat, to end: CGFloat, progress: CGFloat) -> CGFloat {
         return start + (end - start) * progress
     }
+    
+    func rounded(to decimals: Int) -> CGFloat {
+        let factor = pow(10.0, CGFloat(decimals))
+        return (self * factor).rounded() / factor
+    }
 }

@@ -7,13 +7,14 @@
 
 import Foundation
 
-extension MediaFeature.Application.DTOs {
-    struct MediaDTO: Codable, Equatable {
-        let id: UUID
-        let type: String               // "image" ou "video"
-        let url: URL
+extension MediaNamespace.Application.DTOs {
+    struct MediaDTO: Codable {
+        let id: String
+        let type: String
+        let url: String
         let width: Int
         let height: Int
-        let duration: TimeInterval?
+        let duration: Double?
+        let createdAt: String?
     }
 }

@@ -9,10 +9,10 @@ import UIKit
 import AVFoundation
 import Combine
 
-extension MediaFeature.UI.Views {
+extension MediaNamespace.Presentation.Views {
     final class MediaView: UIView {
-        typealias MediaViewModel = MediaFeature.UI.ViewModels.MediaViewModel
-        typealias VideoPlayerView = MediaFeature.UI.Views.VideoPlayerView
+        typealias MediaViewModel = MediaNamespace.Presentation.ViewModels.MediaViewModel
+        typealias VideoPlayerView = MediaNamespace.Presentation.Views.VideoPlayerView
         
         private let imageView = UIImageView()
         private let videoView = VideoPlayerView()

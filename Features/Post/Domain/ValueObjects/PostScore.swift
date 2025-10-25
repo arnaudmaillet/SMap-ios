@@ -7,17 +7,18 @@
 
 import Foundation
 
-struct Score: Equatable, Comparable {
-    let value: Int
-    
-    init(_ value: Int) {
-        guard value >= 0 else {
-            fatalError("Score cannot be negative.")
+extension PostNamespace.Domain.ValueObjects {
+    struct PostScore: Equatable, Comparable {
+        let value: Int
+
+        init(_ value: Int) {
+            self.value = value
         }
-        self.value = value
-    }
-    
-    static func < (lhs: Score, rhs: Score) -> Bool {
-        lhs.value < rhs.value
+
+        static func < (lhs: PostScore, rhs: PostScore) -> Bool {
+            lhs.value < rhs.value
+        }
+
+        static var zero: PostScore { PostScore(0) }
     }
 }

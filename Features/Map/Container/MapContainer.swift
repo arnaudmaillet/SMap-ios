@@ -24,7 +24,7 @@ extension MapFeature.Container {
             self.env = env
 
             switch env {
-            case .local:
+            case .mock:
                 self.repository = LocalAnnotationRepository()
             case .dev, .prod:
                 let apiClient = DefaultAPIClient(env: env)

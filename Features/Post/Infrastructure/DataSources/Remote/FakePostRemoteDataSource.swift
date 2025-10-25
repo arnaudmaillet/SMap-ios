@@ -7,19 +7,27 @@
 
 import Foundation
 
-extension PostFeature.Infrastructure.DataSources {
-    final class FakePostRemoteDataSource: PostFeature.Infrastructure.DataSources.PostRemoteDataSource {
-        typealias Post = PostFeature.Domain.Entities.Post
-        typealias MockPostFactory = PostFeature.Infrastructure.Factories.MockPostFactory
-        
-        var shouldFail = false
-        var delay: TimeInterval = 0
+extension PostNamespace.Infrastructure.DataSources {
+    final class FakePostRemoteDataSource: PostNamespace.Infrastructure.DataSources.PostRemoteDataSource {
+        typealias Post = PostNamespace.Domain.Entities.Post
+        typealias MockPostFactory = PostNamespace.Infrastructure.Factories.MockPostFactory
+        typealias Config = PostNamespace.Infrastructure.DataSources.PostDataSourceConfig
+    
+        private let config: Config
+
+        init(config: Config) {
+            self.config = config
+        }
         
         func getPost(by id: String) async throws -> Post {
-            try await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
-            if shouldFail {
-                throw URLError(.notConnectedToInternet)
+            if config.simulatedRemoteDelay > 0 {
+                try await Task.sleep(nanoseconds: UInt64(config.simulatedRemoteDelay * 1_000_000_000))
             }
+
+            if config.shouldRemoteFail {
+                throw NSError(domain: "Fake error", code: -1)
+            }
+            
             return MockPostFactory.makeMockPost(id: id)
         }
     }

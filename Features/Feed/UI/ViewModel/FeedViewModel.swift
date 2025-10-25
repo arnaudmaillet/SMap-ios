@@ -12,8 +12,8 @@ extension FeedFeature.UI.ViewModel {
     @MainActor
     final class FeedViewModel: ObservableObject {
         // MARK: - Typealiases
-        typealias Post = PostFeature.Domain.Model.Post
-        typealias FetchPostsUseCase = PostFeature.Domain.UseCase.FetchPostsUseCase
+        typealias Post = PostNamespace.Domain.Entities.Post
+        typealias FetchPostsUseCase = PostNamespace.Application.UseCases.FetchPostsUseCase
 
         // MARK: - Published properties
         @Published private(set) var posts: [Post] = []

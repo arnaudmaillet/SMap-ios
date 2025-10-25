@@ -13,7 +13,7 @@ extension MapFeature.Data.Mock {
         typealias Constants = MapFeature.Support.Constants.MockConstants
         typealias AnnotationDTO = MapFeature.Data.DTO.AnnotationDTO
         typealias PostAnnotationDTO = MapFeature.Data.DTO.PostAnnotationDTO
-        typealias PostDTO = PostFeature.Data.DTO.PostDTO
+        typealias PostDTO = PostNamespace.Data.DTO.PostDTO
         
         static func makeCollection(from posts: [PostDTO]) -> [AnnotationDTO] {
             let baseCoord = Constants.coordinates

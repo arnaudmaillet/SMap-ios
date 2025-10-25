@@ -11,8 +11,8 @@ extension ProfileFeature.UI.ViewModel {
 
     @MainActor
     final class ProfileViewModel: ObservableObject {
-        typealias PostPreview = PostFeature.Domain.Model.PostPreview
-        typealias FetchPostPreviewsUseCase = PostFeature.Domain.UseCase.FetchPostPreviewsUseCase
+        typealias PostPreview = PostNamespace.Domain.Entities.PostPreview
+        typealias FetchPostPreviewsUseCase = PostNamespace.Application.UseCases.FetchPostPreviewsUseCase
 
         @Published private(set) var previews: [PostPreview] = []
         @Published private(set) var isLoading: Bool = false

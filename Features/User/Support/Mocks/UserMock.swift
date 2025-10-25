@@ -10,7 +10,7 @@ import Foundation
 extension UserFeature.Support.Mocks {
     struct UserMockFactory {
         typealias UserDTO = UserFeature.Application.DTOs.UserDTO
-        typealias PostDTO = PostFeature.Data.DTO.PostDTO
+        typealias PostDTO = PostNamespace.Data.DTO.PostDTO
 
         static func makeCollection(from posts: [PostDTO]) -> [UserDTO] {
             // On regroupe les posts par auteur

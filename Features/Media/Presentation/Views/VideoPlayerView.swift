@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 
-extension MediaFeature.UI.Views {
+extension MediaNamespace.Presentation.Views {
     final class VideoPlayerView: UIView {
         private var player: AVPlayer? {
             didSet {

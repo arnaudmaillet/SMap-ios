@@ -7,7 +7,9 @@
 
 import Foundation
 
-protocol PostAPIClient {
-    typealias PostDTO = PostFeature.Application.DTOs.PostDTO
-    func fetchPost(id: String) async throws -> PostDTO
+extension PostNamespace.Infrastructure.APIs {
+    protocol PostAPIClient {
+        typealias PostDTO = PostNamespace.Application.DTOs.PostDTO
+        func fetchPost(id: String) async throws -> PostDTO
+    }
 }

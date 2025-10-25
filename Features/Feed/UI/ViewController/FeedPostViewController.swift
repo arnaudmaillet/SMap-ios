@@ -9,8 +9,8 @@ import UIKit
 
 extension FeedFeature.UI.ViewController {
     final class FeedPostViewController: UIViewController {
-        typealias Post = PostFeature.Domain.Model.Post
-        typealias MediaView = MediaFeature.UI.View.MediaView
+        typealias Post = PostNamespace.Domain.Entities.Post
+        typealias MediaView = MediaFeature.UI.Views.MediaView
 
         // MARK: - Properties
 
@@ -122,7 +122,7 @@ extension FeedFeature.UI.ViewController {
 
         private func configure() {
             if let media = post.media.first {
-                mediaView.configure(with: media)
+//                mediaView.configure(with: media)
             }
         }
     }
